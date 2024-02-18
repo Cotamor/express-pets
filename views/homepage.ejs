@@ -211,12 +211,22 @@
     <div class="form-overlay">
       <div class="form-overlay-inner">
         <form class="form-content">
-          <input autocomplete="off" type="text" id="name" class="form-field" />
+          <input autocomplete="off" type="text" id="name" class="form-field" placeholder="Name"/>
+          <input autocomplete="off" type="text" id="email" class="form-field" placeholder="Email Address" />
+          <input autocomplete="off" type="text" id="secret" class="form-field" placeholder="What is the word for a baby dog?"/>
+          <textarea id="comment" class="form-field" placeholder="Comment (optional)"></textarea>
+          <div class="justify-right">
+            <button class="our-btn">Submit</button>
+          </div>
+          <div class="close-form-overlay">x</div>
         </form>
         <div class="form-photo">
-          <p>Thank you for your interest in Barksalot.</p>
+          <img src="/images/fallback.jpg" alt="dog fallback image">
+          <p>Thank you for your interest in <strong>Barksalot</strong></p>
         </div>
-        <div class="thank-you"></div>
+        <!-- <div class="thank-you">
+          <p>Thank you for reaching out.</p>
+        </div> -->
       </div>
     </div>
 

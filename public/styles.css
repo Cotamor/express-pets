@@ -3,6 +3,7 @@ html {
   margin: 0;
   padding: 0;
   background-color: white;
+  box-sizing: border-box;
 }
 
 html {
@@ -446,51 +447,27 @@ textarea.form-field {
   bottom: 0;
   left: 0;
   z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .form-overlay-inner {
   max-width: 880px;
-  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.07);
   background-color: #fff;
-  margin: 16px;
+ flex: 1;
+ display: grid;
+ grid-template-columns: 340px 1fr;
 }
 
-/* Group 7 */
+.form-photo {
+  grid-row: 1;
+}
 
-/* position: absolute;
-width: 881px;
-height: 513px;
-left: 238px;
-top: 1328px; */
+.form-content {
+  padding: 30px;
+}
 
-/* Rectangle 9 */
+.form-photo {}
 
-/* box-sizing: border-box;
 
-position: absolute;
-width: 881px;
-height: 513px;
-left: 238px;
-top: 1328px;
-
-background: #FFFFFF;
-box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.07); */
-
-/* Rectangle 10 */
-
-/* position: absolute;
-width: 340px;
-height: 513px;
-left: 238px;
-top: 1328px;
-
-background: #198F81; */
-
-/* peri-stojnic-5Vr_RVPfbMI-unsplash 3 */
-
-/* position: absolute;
-width: 827px;
-height: 1240px;
-left: -90px;
-top: 1221px;
-
-background: url(peri-stojnic-5Vr_RVPfbMI-unsplash.jpg); */
