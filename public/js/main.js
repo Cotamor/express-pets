@@ -64,7 +64,7 @@ function closeOverlay() {
 
 document.querySelector('.form-content').addEventListener('submit', handleFormSubmit)
 
-function handleFormSubmit (e) {
+async function handleFormSubmit (e) {
   e.preventDefault()
   const userValues = {
     petId: e.target.dataset.id,
@@ -73,5 +73,22 @@ function handleFormSubmit (e) {
     secret: document.querySelector('#secret').value,
     comment: document.querySelector('#comment').value
   }
+  
   console.log(userValues)
+
+  
+  try {
+    const response = await fetch("/submit-contact", {
+      method:"POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userValues)
+    })
+    const message = await response.json()
+    console.log(message)
+  } catch (e) {
+    console.log(e)
+  }
+
 }
