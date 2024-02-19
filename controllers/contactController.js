@@ -1,3 +1,4 @@
+const validator = require('validator')
 const { ObjectId } = require('mongodb')
 const sanitizeHtml = require('sanitize-html')
 const petsCollection = require('../db').db().collection('pets')
@@ -8,18 +9,23 @@ const sanitizeOptions = {
   allowedAttributes: {},
 }
 
-exports.submitContact = async function (req, res) {
-  // Validation #1
+exports.submitContact = async function (req, res, next) {
+  // Validation Secret
   if (req.body.secret.toUpperCase() !== 'PUPPY') {
     console.log('Spam detected')
     return res.json({ message: 'Sorry!' })
   }
-  // Validation #2
+  // Validation Email
+  if(!validator.isEmail(req.body.email)) {
+    console.log('Invalid email detected')
+    return res.json({message: 'Sorry!'})
+  }
+  // Validation ID
   if (!ObjectId.isValid(req.body.petId)) {
     console.log('Invalid id detected')
     return res.json({ message: 'Sorry!' })
   }
-  // Validation #3
+  // Validation ID exists in database
   req.body.petId = new ObjectId(req.body.petId)
   const doesPetExist = await petsCollection.findOne({ _id: req.body.petId })
   if (!doesPetExist) {
@@ -45,7 +51,7 @@ exports.submitContact = async function (req, res) {
   })
 
   try {
-    transport.sendMail({
+    const promise1 = transport.sendMail({
       to: ourObject.email,
       from: 'petadoption@localhost',
       subject: `Thank for your interest in ${doesPetExist.name}`,
@@ -55,7 +61,7 @@ exports.submitContact = async function (req, res) {
       `,
     })
 
-    transport.sendMail({
+    const promise2 =transport.sendMail({
       to: 'petadoption@localhost',
       from: 'petadoption@localhost',
       subject: `Someone is interested in ${doesPetExist.name}`,
@@ -68,7 +74,7 @@ exports.submitContact = async function (req, res) {
       `,
     })
 
-   
+    await Promise.all([promise1, promise2])
 
   } catch (err) {
     next(err)

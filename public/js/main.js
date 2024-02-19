@@ -10,7 +10,7 @@ async function start() {
 
 start()
 
-// pet filter button code
+// PET FILTER
 const allButtons = document.querySelectorAll('.pet-filter button')
 
 allButtons.forEach((el) => {
@@ -35,23 +35,22 @@ function handleButtonClick(e) {
   })
 }
 
+// FORM OVERLAY
 document.querySelector('.form-overlay').style.display = ''
 
-// Open and close contact form
+// Open contact form
 function openOverlay(el) {
   document.querySelector('.form-content').dataset.id = el.dataset.id
-  document.querySelector('.form-photo p strong').textContent =
-    el.closest('.pet-card').querySelector('.pet-name').textContent.trim() + '.'
-
+  document.querySelector('.form-photo p strong').textContent = el.closest('.pet-card').querySelector('.pet-name').textContent.trim() + '.'
   document.querySelector('.form-photo img').src = el
     .closest('.pet-card')
     .querySelector('.pet-card-photo img').src
-
   document
     .querySelector('.form-overlay')
     .classList.add('form-overlay--is-visible')
+  document.querySelector(':root').style.overflowY = 'hidden' // hide scrollbar
 }
-
+// Close contact form
 document
   .querySelector('.close-form-overlay')
   .addEventListener('click', closeOverlay)
@@ -60,17 +59,13 @@ function closeOverlay() {
   document
     .querySelector('.form-overlay')
     .classList.remove('form-overlay--is-visible')
+    document.querySelector(':root').style.overflowY = '' // reset
+  
 }
-
+// Submit form
 document
   .querySelector('.form-content')
   .addEventListener('submit', handleFormSubmit)
-
-function closeOverlay() {
-  document
-    .querySelector('.form-overlay')
-    .classList.remove('form-overlay--is-visible')
-}
 
 async function handleFormSubmit(e) {
   e.preventDefault()
