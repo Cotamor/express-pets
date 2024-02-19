@@ -39,7 +39,7 @@ document.querySelector('.form-overlay').style.display = ''
 
 // Open and close contact form
 function openOverlay(el) {
-  document.querySelector('.form-content').dataset.id= el.dataset.id
+  document.querySelector('.form-content').dataset.id = el.dataset.id
   document.querySelector('.form-photo p strong').textContent =
     el.closest('.pet-card').querySelector('.pet-name').textContent.trim() + '.'
 
@@ -62,33 +62,51 @@ function closeOverlay() {
     .classList.remove('form-overlay--is-visible')
 }
 
-document.querySelector('.form-content').addEventListener('submit', handleFormSubmit)
+document
+  .querySelector('.form-content')
+  .addEventListener('submit', handleFormSubmit)
 
-async function handleFormSubmit (e) {
+function closeOverlay() {
+  document
+    .querySelector('.form-overlay')
+    .classList.remove('form-overlay--is-visible')
+}
+
+async function handleFormSubmit(e) {
   e.preventDefault()
   const userValues = {
     petId: e.target.dataset.id,
     name: document.querySelector('#name').value,
     email: document.querySelector('#email').value,
     secret: document.querySelector('#secret').value,
-    comment: document.querySelector('#comment').value
+    comment: document.querySelector('#comment').value,
   }
-  
+
   console.log(userValues)
 
-  
   try {
-    const response = await fetch("/submit-contact", {
-      method:"POST",
+    const response = await fetch('/submit-contact', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userValues)
+      body: JSON.stringify(userValues),
     })
     const message = await response.json()
     console.log(message)
+
+    document.querySelector('.thank-you').classList.add('thank-you--visible')
+    setTimeout(closeOverlay, 2500)
+    setTimeout(() => {
+      document
+        .querySelector('.thank-you')
+        .classList.remove('thank-you--visible')
+      document.querySelector('#name').value = ''
+      document.querySelector('#email').value = ''
+      document.querySelector('#secret').value = ''
+      document.querySelector('#comment').value = ''
+    }, 2900)
   } catch (e) {
     console.log(e)
   }
-
 }
