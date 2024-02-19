@@ -1,8 +1,9 @@
 const validator = require('validator')
+const nodemailer = require('nodemailer')
 const { ObjectId } = require('mongodb')
 const sanitizeHtml = require('sanitize-html')
 const petsCollection = require('../db').db().collection('pets')
-const nodemailer = require('nodemailer')
+const contactsCollection = require('../db').db().collection('contacts')
 
 const sanitizeOptions = {
   allowedTags: [],
@@ -15,6 +16,17 @@ exports.submitContact = async function (req, res, next) {
     console.log('Spam detected')
     return res.json({ message: 'Sorry!' })
   }
+  // Validation for not passing in object to mongodb
+  if(typeof req.body.name != 'string') {
+    req.body.name = ""
+  }
+  if(typeof req.body.email != 'string') {
+    req.body.email = ""
+  }
+  if(typeof req.body.comment != 'string') {
+    req.body.comment = ""
+  }
+
   // Validation Email
   if(!validator.isEmail(req.body.email)) {
     console.log('Invalid email detected')
@@ -34,6 +46,7 @@ exports.submitContact = async function (req, res, next) {
   }
 
   const ourObject = {
+    petId: req.body.petId,
     name: sanitizeHtml(req.body.name, sanitizeOptions),
     email: sanitizeHtml(req.body.email, sanitizeOptions),
     comment: sanitizeHtml(req.body.comment, sanitizeOptions),
@@ -74,11 +87,17 @@ exports.submitContact = async function (req, res, next) {
       `,
     })
 
-    await Promise.all([promise1, promise2])
+    const promise3 = await contactsCollection.insertOne(ourObject)
+
+    await Promise.all([promise1, promise2, promise3])
 
   } catch (err) {
     next(err)
   }
 
   res.json({ message: 'Thank you for sending us a data' })
+}
+
+exports.viewPetContacts = async (req, res) => {
+  res.json({message: 'Hello from viewPetContacts'})
 }
