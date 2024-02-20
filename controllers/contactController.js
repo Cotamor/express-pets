@@ -17,20 +17,20 @@ exports.submitContact = async function (req, res, next) {
     return res.json({ message: 'Sorry!' })
   }
   // Validation for not passing in object to mongodb
-  if(typeof req.body.name != 'string') {
-    req.body.name = ""
+  if (typeof req.body.name != 'string') {
+    req.body.name = ''
   }
-  if(typeof req.body.email != 'string') {
-    req.body.email = ""
+  if (typeof req.body.email != 'string') {
+    req.body.email = ''
   }
-  if(typeof req.body.comment != 'string') {
-    req.body.comment = ""
+  if (typeof req.body.comment != 'string') {
+    req.body.comment = ''
   }
 
   // Validation Email
-  if(!validator.isEmail(req.body.email)) {
+  if (!validator.isEmail(req.body.email)) {
     console.log('Invalid email detected')
-    return res.json({message: 'Sorry!'})
+    return res.json({ message: 'Sorry!' })
   }
   // Validation ID
   if (!ObjectId.isValid(req.body.petId)) {
@@ -74,7 +74,7 @@ exports.submitContact = async function (req, res, next) {
       `,
     })
 
-    const promise2 =transport.sendMail({
+    const promise2 = transport.sendMail({
       to: 'petadoption@localhost',
       from: 'petadoption@localhost',
       subject: `Someone is interested in ${doesPetExist.name}`,
@@ -90,7 +90,6 @@ exports.submitContact = async function (req, res, next) {
     const promise3 = await contactsCollection.insertOne(ourObject)
 
     await Promise.all([promise1, promise2, promise3])
-
   } catch (err) {
     next(err)
   }
@@ -99,5 +98,22 @@ exports.submitContact = async function (req, res, next) {
 }
 
 exports.viewPetContacts = async (req, res) => {
-  res.json({message: 'Hello from viewPetContacts'})
+  if (!ObjectId.isValid(req.params.id)) {
+    console.log('bad id')
+    return res.redirect('/')
+  }
+
+  const pet = await petsCollection.findOne({ _id: new ObjectId(req.params.id) })
+
+  if (!pet) {
+    console.log('pet does not exist')
+    return res.redirect('/')
+  }
+
+  const petId = req.params.id
+  const contacts = await contactsCollection
+    .find({ petId: new ObjectId(petId) })
+    .toArray()
+
+  res.render('pet-contacts', { contacts, pet })
 }
